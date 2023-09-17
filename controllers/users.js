@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-
-const { JWT_SECRET = 'secret-key' } = process.env;
+const { JWT_SECRET } = require('../utils/constants');
 
 module.exports.getMeUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -27,7 +26,7 @@ module.exports.addNewUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError('Пользователь уже зарегестрирован'));
+        return next(new ConflictError());
       }
       if (err.name === 'ValidationError') {
         return next(new ValidationError(`${Object.values(err.errors).map(() => err.message).join(', ')}`));
@@ -42,7 +41,7 @@ module.exports.editUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError('Пользователь c таким email уже зарегестрирован'));
+        return next(new ConflictError());
       }
       if (err.name === 'ValidationError') {
         return next(new ValidationError(`${Object.values(err.errors).map(() => err.message).join(', ')}`));

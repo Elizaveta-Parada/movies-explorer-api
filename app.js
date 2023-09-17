@@ -9,8 +9,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./utils/limiter');
 const routes = require('./routes/index');
-
-const { PORT = 3000, DB_URL } = process.env;
+const { PORT, DB_URL } = require('./utils/constants');
 
 const app = express();
 app.use(cors());

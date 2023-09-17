@@ -1,6 +1,7 @@
 class ConflictError extends Error {
-  constructor(message) {
+  constructor(message = 'Пользователь c таким email уже зарегестрирован') {
     super(message);
+    this.name = 'ConflictError';
     this.statusCode = 409;
   }
 }

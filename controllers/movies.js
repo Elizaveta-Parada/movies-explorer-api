@@ -1,7 +1,6 @@
 const Movie = require('../models/movie');
-const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const ForbiddenError = require('../errors/ForbiddenError');
+const { movieNotFound, movieErrorDelete } = require('../errors/error');
 
 module.exports.getMovies = (req, res, next) => {
   const owner = req.user._id;
@@ -50,16 +49,16 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден');
+        return next(movieNotFound);
       }
       if (req.user._id === movie.owner.toString()) {
         return removeCard();
       }
-      throw new ForbiddenError('Попытка удалить фильм другого пользователя');
+      return next(movieErrorDelete);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new ValidationError('Введены не корректные данные'));
+        return next(new ValidationError());
       }
       return next(err);
     });

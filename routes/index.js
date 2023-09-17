@@ -9,7 +9,7 @@ router.use('/users', require('./users'));
 router.use('/movies', require('./movies'));
 
 router.use('/*', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+  next(new NotFoundError());
 });
 
 module.exports = router;
