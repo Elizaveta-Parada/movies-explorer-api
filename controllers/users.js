@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
 
@@ -42,11 +41,11 @@ module.exports.editUser = (req, res, next) => {
   return User.findByIdAndUpdate(req.user._id, { name, email }, { new: 'true', runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь c таким email уже зарегестрирован'));
+      }
       if (err.name === 'ValidationError') {
         return next(new ValidationError(`${Object.values(err.errors).map(() => err.message).join(', ')}`));
-      }
-      if (err.name === 'CastError') {
-        return next(new NotFoundError('Пользователь не найден'));
       }
       return next(err);
     });

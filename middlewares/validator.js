@@ -41,12 +41,13 @@ const signinValidator = celebrate({
 
 const userUpdateValidator = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
-      'string.empty': 'Поле "name" должно быть заполнено',
-      'string.min': 'Поле "name" должно быть не менее 2 символов',
-      'string.max': 'Поле "name" должно быть не более 30 символов',
-      'any.required': 'Поле "name" обязательное для заполнения',
-    }),
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.empty': 'Поле "name" должно быть заполнено',
+        'string.min': 'Поле "name" должно быть не менее 2 символов',
+        'string.max': 'Поле "name" должно быть не более 30 символов',
+        'any.required': 'Поле "name" обязательное для заполнения',
+      }),
     email:
       Joi.string().email().required().messages({
         'string.empty': 'Поле "email" должно быть заполнено',

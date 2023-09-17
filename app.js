@@ -27,8 +27,7 @@ app.use(helmet());
 
 app.use(requestLogger);
 app.use(limiter);
-app.use(routes);
-app.options('*');
+app.use('/', routes);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);

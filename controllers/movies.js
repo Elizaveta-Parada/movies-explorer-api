@@ -4,8 +4,9 @@ const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.send(movies))
+  const owner = req.user._id;
+  Movie.find({ owner })
+    .then((movie) => res.send(movie))
     .catch(next);
 };
 
@@ -43,7 +44,8 @@ module.exports.deleteMovie = (req, res, next) => {
     Movie.findByIdAndRemove(movieId)
       .then(() => {
         res.send({ message: 'Фильм удален' });
-      });
+      })
+      .catch(next);
   };
   Movie.findById(movieId)
     .then((movie) => {
